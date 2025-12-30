@@ -1,0 +1,53 @@
+.budget-section {
+    max-width: 600px;
+    margin: 30px auto;
+    background: rgba(241, 237, 237, 0.98);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2, h3 {
+    color:#302e2e;
+}
+
+.budget-section p {
+    color: #555;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    color:#302e2e;
+}
+
+input, select, .add-btn {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.add-btn {
+    background: rgba(193, 88, 72, 1);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background: rgb(148, 55, 41);
+}
+
+.budget-summary {
+    margin-top: 23px;
+    text-align: left;
+}

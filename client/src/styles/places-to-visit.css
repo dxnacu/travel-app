@@ -1,0 +1,40 @@
+.places-container {
+    margin-bottom: 120px;
+}
+
+body {
+    margin-top: 24px;
+}
+
+.filter-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 35px;
+  margin-bottom: 30px;
+}
+
+.filter-btn {
+  border: 1px solid #000;
+  background: transparent;
+  margin: 5px 5px;
+  border-radius: 7px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: 'Arial';
+  font-size: 15px;
+}
+
+.filter-btn:hover {
+  box-shadow: 3px 3px 0px 0px rgba(0, 0, 0);
+}
+
+.category {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.filter-active {
+  background-color: #1e293b;
+  color: #fff;
+}

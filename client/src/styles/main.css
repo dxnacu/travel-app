@@ -1,0 +1,232 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    position: relative;
+    margin-bottom: 61px;
+}
+
+.hero-container {
+    position: relative;
+    width: 80%;
+    max-width: 970px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 455px;
+    object-fit: cover;
+    border-radius: 35px;
+}
+
+.hero-text {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #f8f5f5;
+    font-family: Arial Black;
+    font-size: 33px;
+    
+    padding: 10px 20px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.hero-h1 {
+    color: #f8f5f5;
+} 
+
+@media (max-width: 768px) {
+    .hero-image {
+        height: 73%;
+        width: 100%;
+    }
+
+    .hero-text {
+        font-size: 24px;
+        text-wrap: wrap;
+    }
+}
+
+.search-bar {
+    display: flex;
+    background: rgba(236, 234, 234, 0.98);
+    padding: 17px;
+    margin-top: -39px;
+    border-radius: 11px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 90;
+}
+
+.search-bar input {
+    border: none;
+    padding: 14px;
+    margin: 0 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    background: rgba(236, 234, 234, 0.98);
+    z-index: 100;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 99;
+}
+
+@media (max-width: 768px) {
+    .search-bar {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        background: rgba(236, 234, 234, 0.98);
+        padding: 17px;
+        margin-top: -110px;
+        border-radius: 11px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 90;
+    }
+    
+    .search-bar input {
+        border: none;
+        padding: 14px;
+        margin: 0 5px;
+        font-size: 14px;
+        border-radius: 5px;
+        background: rgba(236, 234, 234, 0.98);
+        z-index: 100;
+    }
+    
+    .search-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        z-index: 99;
+        align-self: center;
+    }
+}
+
+.why-us {
+    background-color: #f8f5f5;
+    padding: 42px 20px;
+    text-align: center;
+}
+
+.why-us .container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.why-us h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 34px;
+}
+
+.why-us .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    gap: 59px;
+}
+
+.why-us-img {
+    flex: 1;
+    /* max-width: 400px; */
+    width: 100%;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.why-us-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.why-us .text {
+    max-width: 600px;
+}
+
+.why-us .text h3 {
+    font-size: 1.5em;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.why-us .text p{
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+    .why-us .content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .why-us .image {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .why-us .text {
+        flex: 1;
+    }
+}
+
+.content p {
+    padding-bottom: 26px;
+    padding-top: 10px;
+    color: #166088;
+}
+
+h2 {
+    padding-top: 80px;
+    color: #345062;
+}
+
+.budg-btn-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.budg-btn {
+    background: rgba(193, 88, 72, 1);
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: Arial;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.budg-btn a{
+    text-decoration: none;
+    color:#f8f5f5;
+    font-weight: bold;
+}
+
+.budg-btn:hover {
+    background: rgb(148, 55, 41);
+}
