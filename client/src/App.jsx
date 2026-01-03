@@ -6,6 +6,7 @@ import MyTravels from './pages/MyTravels';
 import PlacesToVisit from './pages/PlacesToVisit';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import PlaceView from './components/PlaceView';
 import { PlannedTripsProvider } from './context/plannedTripsContext';
 import { UserProvider } from './context/userContext';
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/places-to-visit" element={<PlacesToVisit />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<SignupPage />} />
+            <Route path="/places/:id" element={<PlaceView />} />
           </Routes>
         </Router>
       </PlannedTripsProvider>

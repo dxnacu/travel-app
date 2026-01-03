@@ -18,6 +18,7 @@
     box-shadow: -2px 4px 12px rgba(35, 34, 33, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
+    cursor: pointer;
     /* overflow: hidden; */
 }
 

@@ -15,7 +15,8 @@ function PlaceCard({ place, onAdd, plannedTrips }){
         setIsAdded(exists);
     }, [plannedTrips, place.name]);
 
-    const handlePlanTrip = () => {
+    const handlePlanTrip = (e) => {
+        e.stopPropagation();
         if (!user) {
             if (window.confirm("You need to be logged in to plan a trip. Do you want to log in?")) {
                 navigate('/login');
@@ -29,8 +30,12 @@ function PlaceCard({ place, onAdd, plannedTrips }){
         }
     };
 
+    const handleCardClick = () => {
+        navigate(`/places/${place.id}`);
+    };
+
     return (
-        <div className="place"
+        <div className="place" onClick={handleCardClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
