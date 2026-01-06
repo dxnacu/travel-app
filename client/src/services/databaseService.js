@@ -1,4 +1,4 @@
-import { collection, getDocs, setDoc, doc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc, getDoc, addDoc, deleteDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from "./firebase";
 
 export async function getPlaces() {
@@ -74,3 +74,21 @@ export async function addUserToDatabase(user, role) {
         throw error;
     }
 }
+
+export const getReviewsForPlace = async (id) => {
+    const reviewsCol = collection(db, 'places', id, 'reviews');
+    const reviewsSnapshot = await getDocs(reviewsCol);
+    return reviewsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addReviewToPlace = async (placeId, reviewData) => {
+    console.log('addReviewToPlace called with:', { placeId, reviewData });
+    const reviewsCol = collection(db, 'places', placeId, 'reviews');
+    console.log('Collection path:', reviewsCol.path);
+    const docRef = await addDoc(reviewsCol, {
+        ...reviewData,
+        createdAt: Timestamp.now()
+    });
+    console.log('Review added with ID:', docRef.id);
+    return { id: docRef.id, ...reviewData, createdAt: Timestamp.now() };
+};

@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getPlaceById } from '../services/databaseService';
+import { getPlaceById, getReviewsForPlace, addReviewToPlace } from '../services/databaseService';
 import { useUser } from '../context/userContext';
-import { useNavigate } from 'react-router-dom';
 import { usePlannedTrips } from '../context/plannedTripsContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,19 +13,15 @@ import '../styles/main.css';
 function PlaceView() {
     const { id } = useParams();
     const { user } = useUser();
-    const navigate = useNavigate();
     const [place, setPlace] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { addTrip } = usePlannedTrips();
     const [breakfastSelection, setBreakfastSelection] = useState({});
     
-    const reviews = [
-        { id: 1, user: 'John Doe', rating: 5, comment: 'Amazing place! Highly recommend.' },
-        { id: 2, user: 'Jane Smith', rating: 4, comment: 'Great experience, but a bit crowded.' }
-    ];
-    // allow local reviews state (will persist later to backend)
-    const [localReviews, setLocalReviews] = useState(reviews);
+    // Reviews state
+    const [reviews, setReviews] = useState([]);
+    const [reviewsLoading, setReviewsLoading] = useState(true);
     const [newRating, setNewRating] = useState(5);
     const [newComment, setNewComment] = useState('');
 
@@ -44,16 +39,21 @@ function PlaceView() {
         fetchPlace();
     }, [id]);
 
-    // const handlePlanTrip = () => {
-    //     if (!user) {
-    //         if (window.confirm("You need to be logged in to plan a trip. Do you want to log in?")) {
-    //             navigate('/login');
-    //         }
-    //         return;
-    //     }
-    //     // Тут можна додати логіку додавання подорожі, але поки що просто повідомлення
-    //     alert(`Trip to ${place.name} planned!`);
-    // };
+    useEffect(() => {
+        if (place) {
+            const fetchReviews = async () => {
+                try {
+                    const reviewsData = await getReviewsForPlace(place.firebaseId || place.id);
+                    setReviews(reviewsData);
+                } catch (err) {
+                    console.error('Error fetching reviews:', err);
+                } finally {
+                    setReviewsLoading(false);
+                }
+            };
+            fetchReviews();
+        }
+    }, [place]);
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
@@ -100,9 +100,6 @@ function PlaceView() {
                     <div className="place-description">
                         <h2>About {place.name}</h2>
                         <p>{place.description}</p>
-                        {/* <button className="plan-trip-btn" onClick={handlePlanTrip}>
-                            Plan Trip Now
-                        </button> */}
                     </div>
 
                     <div className="available-tours">
@@ -116,7 +113,7 @@ function PlaceView() {
                                     </div>
                                     <div className="tour-body">
                                         <p className="tour-dates"><strong>Dates:</strong> {tour.dates}</p>
-                                        <p className="tour-hotel"><strong>Hotel:</strong> {tour.hotel}</p>
+                                        <p className="tour-hotel"><strong>Stay At:</strong> {tour.hotel}</p>
                                         <div className="tour-breakfast">
                                             <label>
                                                 <input
@@ -166,15 +163,45 @@ function PlaceView() {
                     <div className="reviews-section">
                         <h2>Reviews</h2>
                         <div className="reviews-list">
-                            {localReviews.map(review => (
-                                <div key={review.id} className="review-card">
-                                    <div className="review-header">
-                                        <span className="review-user">{review.user}</span>
-                                        <span className="review-rating">⭐ {review.rating}/5</span>
+                            {reviewsLoading ? (
+                                <div>Loading reviews...</div>
+                            ) : reviews.length === 0 ? (
+                                <div>No reviews yet. Be the first to leave a review!</div>
+                            ) : (
+                                reviews.map(review => (
+                                    <div key={review.id} className="review-card modern">
+                                        <div className="review-top">
+                                            <div className="review-user-info">
+                                                <div className="review-avatar">👤</div>
+                                                <div>
+                                                    <div className="review-user">{review.user}</div>
+                                                    <div className="review-date">
+                                                        {review.createdAt ? review.createdAt.toDate().toLocaleDateString() : 'Date not available'}
+                                                    </div>
+                                                </div>
+                                            </div>
+            
+                                            <div className="review-stars">
+                                                {[1,2,3,4,5].map(star => (
+                                                    <span
+                                                        key={star}
+                                                        className={star <= review.rating ? 'star active' : 'star'}
+                                                    >
+                                                        ★
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                        
+                                        <p className="review-comment">{review.comment}</p>
+                        
+                                        <div className="review-actions">
+                                            <button className="like-btn">👍</button>
+                                            <span>298</span>
+                                        </div>
                                     </div>
-                                    <p className="review-comment">{review.comment}</p>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
 
                         <div className="leave-review">
@@ -198,22 +225,32 @@ function PlaceView() {
                                 </label>
                                 <button
                                     className="submit-review-btn"
-                                    onClick={() => {
+                                    onClick={async () => {
+                                        if (!user) {
+                                            toast.error('You need to be logged in to leave a review');
+                                            return;
+                                        }
                                         if (!newComment.trim()) {
                                             toast.error('Please write a comment');
                                             return;
                                         }
-                                        const reviewer = user?.displayName || user?.email?.split('@')[0] || 'Anonymous';
-                                        const newRev = {
-                                            id: Date.now(),
-                                            user: reviewer,
-                                            rating: newRating,
-                                            comment: newComment.trim()
-                                        };
-                                        setLocalReviews(prev => [newRev, ...prev]);
-                                        setNewComment('');
-                                        setNewRating(5);
-                                        toast.success('Review added');
+                                        try {
+                                            const reviewer = user.displayName || user.email.split('@')[0] || 'Anonymous';
+                                            const newRev = {
+                                                user: reviewer,
+                                                rating: newRating,
+                                                comment: newComment.trim()
+                                            };
+                                            console.log('Adding review:', { placeId: place.firebaseId || place.id, newRev });
+                                            const addedReview = await addReviewToPlace(place.firebaseId || place.id, newRev);
+                                            setReviews(prev => [addedReview, ...prev]);
+                                            setNewComment('');
+                                            setNewRating(5);
+                                            toast.success('Review added successfully');
+                                        } catch (err) {
+                                            console.error('Error adding review:', err);
+                                            toast.error('Failed to add review');
+                                        }
                                     }}
                                 >Submit Review</button>
                             </div>
